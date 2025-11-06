@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Ujian SPENSE - SMP Negeri 9 Palu</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f3f4f6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      visibility: hidden;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #2563eb;
+      color: white;
+      padding: 10px 20px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+    }
+    header img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+    }
+    header h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+    .content {
+      margin-top: 80px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+    .login-container, .dashboard {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+    }
+    input, button {
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #1d4ed8;
+    }
+    .folder, .mapel {
+      margin: 8px 0;
+      padding: 12px;
+      background: #e5e7eb;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .folder:hover, .mapel:hover {
+      background: #d1d5db;
+    }
+    .hidden {
+      display: none !important;
+      visibility: hidden;
+      opacity: 0;
+    }
+    #formModal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    #formModal iframe {
+      width: 90%;
+      height: 85%;
+      border: none;
+      border-radius: 12px;
+    }
+    #closeForm {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background: red;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    @media (max-width: 600px) {
+      .dashboard { width: 95%; padding: 1rem; }
+      header h1 { font-size: 14px; }
+      #formModal iframe { width: 95%; height: 80%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Tut_Wuri_Handayani.png" alt="Logo Sekolah">
+    <h1>E-Ujian SMP Negeri 9 Palu</h1>
+  </header>
+
+  <div class="content">
+    <!-- Halaman Login -->
+    <div class="login-container" id="loginPage">
+      <h2>Login E-Ujian</h2>
+      <input type="text" id="username" placeholder="Username">
+      <input type="password" id="password" placeholder="Password">
+      <button onclick="login()">Masuk</button>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard hidden" id="dashboard">
+      <h2>Dashboard E-Ujian</h2>
+      <p id="roleInfo"></p>
+      <div id="kelasList"></div>
+    </div>
+
+    <!-- Halaman Mapel -->
+    <div class="dashboard hidden" id="mapelPage">
+      <h3 id="kelasTitle"></h3>
+      <div id="mapelList"></div>
+      <button onclick="backToDashboard()">⬅ Kembali</button>
+    </div>
+  </div>
+
+  <!-- Modal Form Ujian -->
+  <div id="formModal" class="hidden">
+    <button id="closeForm" onclick="closeForm()">Tutup</button>
+    <iframe id="formFrame"></iframe>
+  </div>
+
+<script>
+window.addEventListener("load", () => document.body.style.visibility = "visible");
+
+const ADMIN = { username: 'SPENSE', password: '40203561' };
+const SISWA = { username: 'SISWA', password: 'UJIAN2025' };
+
+const FOLDER_PASSWORDS = { 7: 'kelas7', 8: 'kelas8', 9: 'kelas9' };
+
+const DATA = {
+  7: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '' },
+  8: { 'Matematika': '', 'Bahasa Inggris': '', 'IPS': '' },
+  9: { 'Seni Budaya': '', 'PPKN': '', 'IPA': '' }
+};
+
+let currentUser = null;
+let currentClass = null;
+
+function login() {
+  const user = document.getElementById('username').value.trim();
+  const pass = document.getElementById('password').value.trim();
+
+  if (user === ADMIN.username && pass === ADMIN.password) {
+    currentUser = 'admin';
+  } else if (user === SISWA.username && pass === SISWA.password) {
+    currentUser = 'siswa';
+  } else {
+    alert('Username atau password salah!');
+    return;
+  }
+
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+  document.getElementById('roleInfo').innerText = `Anda login sebagai: ${currentUser === 'admin' ? 'Admin' : 'Siswa'}`;
+  showDashboard();
+}
+
+function showDashboard() {
+  const container = document.getElementById('kelasList');
+  container.innerHTML = '';
+  [7,8,9].forEach(kls => {
+    const div = document.createElement('div');
+    div.className = 'folder';
+    div.innerText = `📁 Kelas ${kls}`;
+    div.onclick = () => openKelas(kls);
+    container.appendChild(div);
+  });
+}
+
+function openKelas(kelas) {
+  const pass = prompt(`Masukkan password untuk Kelas ${kelas}`);
+  if (pass !== FOLDER_PASSWORDS[kelas]) {
+    alert('Password salah!');
+    return;
+  }
+  currentClass = kelas;
+  document.getElementById('dashboard').classList.add('hidden');
+  document.getElementById('mapelPage').classList.remove('hidden');
+  document.getElementById('kelasTitle').innerText = `📚 Daftar Mapel Kelas ${kelas}`;
+  showMapelList(kelas);
+}
+
+function showMapelList(kelas) {
+  const list = document.getElementById('mapelList');
+  list.innerHTML = '';
+  Object.keys(DATA[kelas]).forEach(mapel => {
+    const div = document.createElement('div');
+    div.className = 'mapel';
+    const label = document.createElement('span');
+    label.innerText = mapel;
+    div.appendChild(label);
+
+    if (currentUser === 'admin') {
+      const editBtn = document.createElement('button');
+      editBtn.innerText = '📝 Atur Link';
+      editBtn.style.marginLeft = '8px';
+      editBtn.onclick = e => {
+        e.stopPropagation();
+        const newLink = prompt(`Masukkan link Google Form untuk ${mapel}:`, DATA[kelas][mapel]);
+        if (newLink) {
+          DATA[kelas][mapel] = newLink;
+          localStorage.setItem('formsData', JSON.stringify(DATA));
+          alert('Link form berhasil disimpan!');
+        }
+      };
+      div.appendChild(editBtn);
+    }
+
+    const openBtn = document.createElement('button');
+    openBtn.innerText = '▶ Buka Ujian';
+    openBtn.style.marginLeft = '8px';
+    openBtn.onclick = e => {
+      e.stopPropagation();
+      openForm(DATA[kelas][mapel]);
+    };
+    div.appendChild(openBtn);
+
+    list.appendChild(div);
+  });
+}
+
+function backToDashboard() {
+  document.getElementById('mapelPage').classList.add('hidden');
+  document.getElementById('dashboard').classList.remove('hidden');
+}
+
+function openForm(url) {
+  if (!url) {
+    alert('Link form belum diatur oleh admin.');
+    return;
+  }
+  document.getElementById('formFrame').src = url;
+  document.getElementById('formModal').classList.remove('hidden');
+}
+
+function closeForm() {
+  document.getElementById('formModal').classList.add('hidden');
+  document.getElementById('formFrame').src = '';
+}
+
+window.onload = function() {
+  const saved = localStorage.getItem('formsData');
+  if (saved) Object.assign(DATA, JSON.parse(saved));
+};
+</script>
+</body>
+</html>
