@@ -7,7 +7,7 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
       margin: 0;
       background: #f3f4f6;
       display: flex;
@@ -17,6 +17,7 @@
       min-height: 100vh;
       visibility: hidden;
     }
+
     header {
       display: flex;
       align-items: center;
@@ -30,71 +31,107 @@
       left: 0;
       z-index: 10;
     }
-    header img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-    }
-    header h1 {
-      font-size: 18px;
-      margin: 0;
-    }
+    header img { width: 40px; height: 40px; border-radius: 50%; }
+    header h1 { font-size: 18px; margin: 0; }
+
+    /* --- Tampilan Login Baru --- */
     .content {
-      margin-top: 80px;
+      margin-top: 100px;
+      width: 100%;
+      max-width: 900px;
+      display: flex;
+      flex-wrap: wrap;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .login-left {
+      background: #1e3a8a;
+      color: white;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 250px;
+      padding: 20px;
+    }
+    .login-left img {
+      max-width: 90%;
+      height: auto;
+    }
+    .login-right {
+      flex: 1;
+      padding: 40px 30px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      width: 100%;
+      justify-content: center;
     }
-    .login-container, .dashboard {
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
+    .login-right h2 {
+      color: #111827;
+      margin-bottom: 5px;
     }
-    input, button {
-      padding: 10px;
-      margin: 8px 0;
+    .login-right h4 {
+      color: #6b7280;
+      margin-bottom: 20px;
+      font-weight: 400;
+    }
+    input {
       width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      padding: 12px 15px;
+      border: none;
+      background: #f3f4f6;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      font-size: 15px;
+      outline: none;
+      transition: 0.3s;
+    }
+    input:focus {
+      background: #e5e7eb;
     }
     button {
       background: #2563eb;
       color: white;
       border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 600;
       cursor: pointer;
-      font-weight: bold;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.3);
     }
-    button:hover {
-      background: #1d4ed8;
+    button:hover { background: #1d4ed8; }
+
+    /* --- Dashboard --- */
+    .dashboard {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      margin-top: 40px;
     }
     .folder, .mapel {
       margin: 8px 0;
-      padding: 12px;
-      background: #e5e7eb;
+      padding: 14px;
+      background: #f3f4f6;
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
+      transition: 0.3s;
     }
-    .folder:hover, .mapel:hover {
-      background: #d1d5db;
-    }
-    .hidden {
-      display: none !important;
-      visibility: hidden;
-      opacity: 0;
-    }
+    .folder:hover, .mapel:hover { background: #e5e7eb; }
+
+    /* --- Modal --- */
     #formModal {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.9);
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -105,11 +142,11 @@
       height: 85%;
       border: none;
       border-radius: 12px;
+      background: white;
     }
     #closeForm {
       position: absolute;
-      top: 20px;
-      right: 30px;
+      top: 20px; right: 30px;
       background: red;
       color: white;
       border: none;
@@ -118,42 +155,53 @@
       cursor: pointer;
       font-weight: bold;
     }
-    @media (max-width: 600px) {
+
+    .hidden { display: none !important; visibility: hidden; opacity: 0; }
+
+    @media (max-width: 768px) {
+      .content {
+        flex-direction: column;
+        margin-top: 80px;
+      }
+      .login-left { display: none; }
+      .login-right { padding: 30px 20px; }
       .dashboard { width: 95%; padding: 1rem; }
-      header h1 { font-size: 14px; }
-      #formModal iframe { width: 95%; height: 80%; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Tut_Wuri_Handayani.png" alt="Logo Sekolah">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/SMPN_9_Palu.png" alt="Logo Sekolah">
     <h1>E-Ujian SMP Negeri 9 Palu</h1>
   </header>
 
-  <div class="content">
-    <!-- Halaman Login -->
-    <div class="login-container" id="loginPage">
-      <h2>Login E-Ujian</h2>
+  <!-- Login -->
+  <div class="content" id="loginPage">
+    <div class="login-left">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/SMPN_9_Palu.png" alt="Login Illustration">
+    </div>
+    <div class="login-right">
+      <h2><b>E-Ujian</b> SPENSE</h2>
+      <h4>Selamat Datang Kembali!</h4>
       <input type="text" id="username" placeholder="Username">
       <input type="password" id="password" placeholder="Password">
       <button onclick="login()">Masuk</button>
     </div>
+  </div>
 
-    <!-- Dashboard -->
-    <div class="dashboard hidden" id="dashboard">
-      <h2>Dashboard E-Ujian</h2>
-      <p id="roleInfo"></p>
-      <div id="kelasList"></div>
-    </div>
+  <!-- Dashboard -->
+  <div class="dashboard hidden" id="dashboard">
+    <h2>Dashboard E-Ujian</h2>
+    <p id="roleInfo"></p>
+    <div id="kelasList"></div>
+  </div>
 
-    <!-- Halaman Mapel -->
-    <div class="dashboard hidden" id="mapelPage">
-      <h3 id="kelasTitle"></h3>
-      <div id="mapelList"></div>
-      <button onclick="backToDashboard()">⬅ Kembali</button>
-    </div>
+  <!-- Halaman Mapel -->
+  <div class="dashboard hidden" id="mapelPage">
+    <h3 id="kelasTitle"></h3>
+    <div id="mapelList"></div>
+    <button onclick="backToDashboard()">⬅ Kembali</button>
   </div>
 
   <!-- Modal Form Ujian -->
@@ -167,7 +215,6 @@ window.addEventListener("load", () => document.body.style.visibility = "visible"
 
 const ADMIN = { username: 'SPENSE', password: '40203561' };
 const SISWA = { username: 'SISWA', password: 'UJIAN2025' };
-
 const FOLDER_PASSWORDS = { 7: 'kelas7', 8: 'kelas8', 9: 'kelas9' };
 
 const DATA = {
@@ -176,8 +223,7 @@ const DATA = {
   9: { 'Seni Budaya': '', 'PPKN': '', 'IPA': '' }
 };
 
-let currentUser = null;
-let currentClass = null;
+let currentUser = null, currentClass = null;
 
 function login() {
   const user = document.getElementById('username').value.trim();
