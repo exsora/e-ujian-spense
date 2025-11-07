@@ -4,24 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>E-Ujian SMP Negeri 9 Palu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
     body {
-      font-family: 'Poppins', 'Segoe UI', sans-serif;
-      margin: 0;
-      background: #f3f4f6;
+      background: #f5f7fa;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
-      visibility: hidden;
     }
 
     header {
       display: flex;
       align-items: center;
-      gap: 10px;
       background: #2563eb;
       color: white;
       padding: 10px 20px;
@@ -30,11 +27,12 @@
       top: 0;
       left: 0;
       z-index: 10;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
     header img { width: 40px; height: 40px; border-radius: 50%; }
-    header h1 { font-size: 18px; margin: 0; }
+    header h1 { font-size: 18px; margin-left: 10px; }
 
-    /* --- Tampilan Login Baru --- */
+    /* LOGIN PAGE */
     .content {
       margin-top: 100px;
       width: 100%;
@@ -42,19 +40,17 @@
       display: flex;
       flex-wrap: wrap;
       background: white;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
       overflow: hidden;
     }
     .login-left {
       background: #1e3a8a;
-      color: white;
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-width: 250px;
-      padding: 20px;
+      padding: 30px;
     }
     .login-left img {
       max-width: 90%;
@@ -62,33 +58,27 @@
     }
     .login-right {
       flex: 1;
-      padding: 40px 30px;
+      padding: 50px 40px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      background: #fff;
     }
-    .login-right h2 {
-      color: #111827;
-      margin-bottom: 5px;
-    }
-    .login-right h4 {
-      color: #6b7280;
-      margin-bottom: 20px;
-      font-weight: 400;
-    }
+    .login-right h2 { color: #1e3a8a; margin-bottom: 5px; font-weight: 700; }
+    .login-right h4 { color: #6b7280; margin-bottom: 20px; font-weight: 400; }
     input {
       width: 100%;
       padding: 12px 15px;
-      border: none;
-      background: #f3f4f6;
+      border: 2px solid #e5e7eb;
       border-radius: 10px;
       margin-bottom: 15px;
       font-size: 15px;
-      outline: none;
       transition: 0.3s;
     }
     input:focus {
-      background: #e5e7eb;
+      border-color: #2563eb;
+      outline: none;
+      box-shadow: 0 0 5px rgba(37,99,235,0.4);
     }
     button {
       background: #2563eb;
@@ -104,29 +94,44 @@
     }
     button:hover { background: #1d4ed8; }
 
-    /* --- Dashboard --- */
+    /* DASHBOARD */
     .dashboard {
       background: white;
       padding: 2rem;
       border-radius: 16px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       max-width: 600px;
       width: 90%;
       text-align: center;
-      margin-top: 40px;
+      margin-top: 130px;
+      transition: 0.3s;
     }
+    .dashboard h2 { margin-bottom: 15px; color: #111827; }
     .folder, .mapel {
-      margin: 8px 0;
+      margin: 10px 0;
       padding: 14px;
       background: #f3f4f6;
       border-radius: 10px;
       cursor: pointer;
       font-weight: 600;
+      transition: all 0.3s;
+    }
+    .folder:hover, .mapel:hover { background: #e0e7ff; }
+
+    .mapel button {
+      margin-left: 10px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
       transition: 0.3s;
     }
-    .folder:hover, .mapel:hover { background: #e5e7eb; }
+    .mapel button:hover { background: #1d4ed8; }
 
-    /* --- Modal --- */
+    /* MODAL */
     #formModal {
       position: fixed;
       top: 0; left: 0;
@@ -154,15 +159,13 @@
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
+      box-shadow: 0 2px 8px rgba(255,0,0,0.4);
     }
 
-    .hidden { display: none !important; visibility: hidden; opacity: 0; }
+    .hidden { display: none !important; }
 
     @media (max-width: 768px) {
-      .content {
-        flex-direction: column;
-        margin-top: 80px;
-      }
+      .content { flex-direction: column; margin-top: 80px; }
       .login-left { display: none; }
       .login-right { padding: 30px 20px; }
       .dashboard { width: 95%; padding: 1rem; }
@@ -176,7 +179,7 @@
     <h1>E-Ujian SMP Negeri 9 Palu</h1>
   </header>
 
-  <!-- Login -->
+  <!-- LOGIN -->
   <div class="content" id="loginPage">
     <div class="login-left">
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/SMPN_9_Palu.png" alt="Login Illustration">
@@ -190,37 +193,35 @@
     </div>
   </div>
 
-  <!-- Dashboard -->
+  <!-- DASHBOARD -->
   <div class="dashboard hidden" id="dashboard">
     <h2>Dashboard E-Ujian</h2>
     <p id="roleInfo"></p>
     <div id="kelasList"></div>
   </div>
 
-  <!-- Halaman Mapel -->
+  <!-- MAPEL PAGE -->
   <div class="dashboard hidden" id="mapelPage">
     <h3 id="kelasTitle"></h3>
     <div id="mapelList"></div>
     <button onclick="backToDashboard()">⬅ Kembali</button>
   </div>
 
-  <!-- Modal Form Ujian -->
+  <!-- MODAL FORM -->
   <div id="formModal" class="hidden">
     <button id="closeForm" onclick="closeForm()">Tutup</button>
     <iframe id="formFrame"></iframe>
   </div>
 
 <script>
-window.addEventListener("load", () => document.body.style.visibility = "visible");
-
 const ADMIN = { username: 'SPENSE', password: '40203561' };
 const SISWA = { username: 'SISWA', password: 'UJIAN2025' };
 const FOLDER_PASSWORDS = { 7: 'kelas7', 8: 'kelas8', 9: 'kelas9' };
 
 const DATA = {
-  7: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '', 'AGAMA HINDU': '', 'AGAMA KRISTEN': '', 'AGAMA KATOLIK': '' },
-  8: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '', 'AGAMA HINDU': '', 'AGAMA KRISTEN': '', 'AGAMA KATOLIK': '' },
-  9: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '', 'AGAMA HINDU': '', 'AGAMA KRISTEN': '', 'AGAMA KATOLIK': '' }
+  7: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '' },
+  8: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '' },
+  9: { 'Matematika': '', 'Bahasa Indonesia': '', 'IPA': '', 'Bahasa Inggris': '', 'IPS': '', 'Seni Budaya': '', 'PKN': '', 'PJOK': '', 'PRAKARYA': '', 'INFORMATIKA': '', 'AGAMA ISLAM': '' }
 };
 
 let currentUser = null, currentClass = null;
@@ -275,14 +276,11 @@ function showMapelList(kelas) {
   Object.keys(DATA[kelas]).forEach(mapel => {
     const div = document.createElement('div');
     div.className = 'mapel';
-    const label = document.createElement('span');
-    label.innerText = mapel;
-    div.appendChild(label);
+    div.innerText = mapel;
 
     if (currentUser === 'admin') {
       const editBtn = document.createElement('button');
       editBtn.innerText = '📝 Atur Link';
-      editBtn.style.marginLeft = '8px';
       editBtn.onclick = e => {
         e.stopPropagation();
         const newLink = prompt(`Masukkan link Google Form untuk ${mapel}:`, DATA[kelas][mapel]);
@@ -297,7 +295,6 @@ function showMapelList(kelas) {
 
     const openBtn = document.createElement('button');
     openBtn.innerText = '▶ Buka Ujian';
-    openBtn.style.marginLeft = '8px';
     openBtn.onclick = e => {
       e.stopPropagation();
       openForm(DATA[kelas][mapel]);
@@ -327,11 +324,20 @@ function closeForm() {
   document.getElementById('formFrame').src = '';
 }
 
-window.onload = function() {
+// ✅ Perbaikan: hanya sinkron link lama, bukan daftar mapel
+window.onload = () => {
   const saved = localStorage.getItem('formsData');
-  if (saved) Object.assign(DATA, JSON.parse(saved));
+  if (saved) {
+    const oldData = JSON.parse(saved);
+    for (let k in DATA) {
+      for (let mapel in DATA[k]) {
+        if (oldData[k] && oldData[k][mapel]) {
+          DATA[k][mapel] = oldData[k][mapel];
+        }
+      }
+    }
+  }
 };
 </script>
 </body>
 </html>
-
